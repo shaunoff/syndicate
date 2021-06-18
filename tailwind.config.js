@@ -3,9 +3,7 @@ const themeWrapper = require("@shaunoff-ui/components/config")
 
 module.exports = themeWrapper({
   //mode: "jit",
-  purge: {
-    content: ["node_modules/@shaunoff-ui/components/dist/index.js"],
-  },
+  purge: ["node_modules/@shaunoff-ui/components/dist/index.js"],
   darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {},
