@@ -6,7 +6,7 @@ module.exports = themeWrapper({
   purge: {
     content: [
       "{pages,app}/**/*.{js,ts,jsx,tsx}",
-      "../node_modules/@shaunoff-ui/components/dist/index.js",
+      "./node_modules/@shaunoff-ui/components/dist/index.js",
     ],
   },
   darkMode: false, // or 'media' or 'class'
