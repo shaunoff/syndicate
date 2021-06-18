@@ -6,7 +6,7 @@ import { Button, Table, Input } from "@shaunoff-ui/components"
 export { FORM_ERROR } from "app/core/components/Form"
 
 interface WinFormProps<S extends z.ZodType<any, any>> extends FormProps<S> {
-  userWins?: (User & {
+  userWins: (User & {
     wins: Win[]
   })[]
 }

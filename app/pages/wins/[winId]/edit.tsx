@@ -21,7 +21,7 @@ export const EditWin = () => {
         <h1>Edit Win {win.id}</h1>
         <pre>{JSON.stringify(win)}</pre>
 
-        <WinForm
+        {/* <WinForm
           submitText="Update Win"
           // TODO use a zod schema for form validation
           //  - Tip: extract mutation's schema into a shared `validations.ts` file and
@@ -43,7 +43,7 @@ export const EditWin = () => {
               }
             }
           }}
-        />
+        /> */}
       </div>
     </>
   )
