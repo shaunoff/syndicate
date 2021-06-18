@@ -11,7 +11,7 @@ const NewWinPage: BlitzPage = () => {
     <div>
       <h1>Create New Win</h1>
 
-      <WinForm
+      {/* <WinForm
         submitText="Create Win"
         // TODO use a zod schema for form validation
         //  - Tip: extract mutation's schema into a shared `validations.ts` file and
@@ -29,7 +29,7 @@ const NewWinPage: BlitzPage = () => {
             }
           }
         }}
-      />
+      /> */}
 
       <p>
         <Link href={Routes.WinsPage()}>
