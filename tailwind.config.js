@@ -1,9 +1,9 @@
 // tailwind.config.js
-const themeWrapper = require("@shaunoff-ui/components/config")
+//const themeWrapper = require("@shaunoff-ui/components/config")
 
-module.exports = themeWrapper({
+module.exports = {
   //mode: "jit",
-  purge: ["node_modules/@shaunoff-ui/components/dist/index.js"],
+  purge: ["{pages,app}/**/*.{js,ts,jsx,tsx}", "node_modules/@shaunoff-ui/components/dist/index.js"],
   darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {},
@@ -12,4 +12,4 @@ module.exports = themeWrapper({
     extend: {},
   },
   plugins: [],
-})
+}
