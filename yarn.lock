@@ -1284,10 +1284,10 @@
     debug "^3.2.6"
     tslib "^1.10.0"
 
-"@shaunoff-ui/components@1.1.5":
-  version "1.1.5"
-  resolved "https://registry.npmjs.org/@shaunoff-ui/components/-/components-1.1.5.tgz#91d11d07b675153c4d075ee1f8d2674c96503d53"
-  integrity sha512-+5mpU8MV93J2Wr+ciY/kAWY9RnlWbaCxyE2/o1OgWPv8Br+osAiIV7PWE1nTeVl2Rb7/ZYe3FRGYdDxy5Silxg==
+"@shaunoff-ui/components@1.1.6":
+  version "1.1.6"
+  resolved "https://registry.npmjs.org/@shaunoff-ui/components/-/components-1.1.6.tgz#6363bed7f499a60927ea7fbbf314b8fc442bc053"
+  integrity sha512-3A8oOkcI1PJ/GDZ7KHu/7JnBRtlKuKhvi5Ea/zhJ+T0MJTezcHW9lZjOoSi9cDdOx9WjXJm5ynGfbhlMQOERcQ==
   dependencies:
     clsx "^1.1.1"
     deepmerge "^4.2.2"
