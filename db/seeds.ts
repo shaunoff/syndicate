@@ -9,6 +9,7 @@ import db from "./index"
  */
 
 const seed = async () => {
+  // await db.win.deleteMany({})
   // await db.user.create({
   //   data: { name: "Lummy", email: "lummy@gmail.com" },
   // })
@@ -42,8 +43,14 @@ const seed = async () => {
   // await db.user.create({
   //   data: { name: "Pigeon", email: "Pigeon@gmail.com" },
   // })
+  // await db.user.create({
+  //   data: { name: "Philis", email: "philis@gmail.com" },
+  // })
+  // await db.user.create({
+  //   data: { name: "Yogi", email: "Yogi@gmail.com" },
+  // })
   await db.win.deleteMany({})
-  for (let i = 1; i <= 11; i++) {
+  for (let i = 17; i <= 29; i++) {
     await db.win.create({
       data: { amount: 0, week: 1, userId: i, paid: true },
     })
