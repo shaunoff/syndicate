@@ -43,7 +43,7 @@ const seed = async () => {
   //   data: { name: "Pigeon", email: "Pigeon@gmail.com" },
   // })
   await db.win.deleteMany({})
-  for (let i = 3; i <= 13; i++) {
+  for (let i = 3; i <= 11; i++) {
     await db.win.create({
       data: { amount: 0, week: 1, userId: i, paid: true },
     })
