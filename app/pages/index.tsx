@@ -1,30 +1,138 @@
 import { Suspense } from "react"
-import { Link, BlitzPage, useMutation, Routes } from "blitz"
+import { Link, BlitzPage, useMutation, useQuery, Routes } from "blitz"
 import Layout from "app/core/layouts/Layout"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import logout from "app/auth/mutations/logout"
+import { Table } from "@shaunoff-ui/components"
+import getWinTotals, { NormalizedWin, UserWinData } from "app/wins/queries/getWinTotals"
+import {
+  CheckCircleIcon,
+  XCircleIcon,
+  BanIcon,
+  ArrowSmRightIcon,
+  ArrowSmUpIcon,
+  ArrowSmDownIcon,
+  CurrencyDollarIcon,
+  CalendarIcon,
+} from "@heroicons/react/outline"
 
 /*
  * This file is just for a pleasant getting started page for your new app.
  * You can delete everything in here and start from scratch if you like.
  */
 
+const currentForm = (wins: NormalizedWin[], length = 6) => {
+  const latestWins = wins.slice(-length).map((win) => win.amount > 0)
+  const winsShort = wins.length - length
+  if (winsShort < 0) {
+    return [...new Array<null>(Math.abs(winsShort)).fill(null), ...latestWins]
+  } else {
+    return latestWins
+  }
+}
+
+const sortedPrevious = (userData: UserWinData[]) => {
+  return userData
+    .map((data) => data.wins[data.wins.length - 2]?.runningTotal || 0)
+    .sort((a, b) => b - a)
+}
+
 const UserInfo = () => {
   const currentUser = useCurrentUser()
   const [logoutMutation] = useMutation(logout)
+  const [userWins] = useQuery(getWinTotals, {})
 
+  const rankedUsers = Object.values(userWins).sort((a, b) => b.total - a.total)
+
+  /**
+   * This sorts the previous rounds totals to determine whether the current position has changed
+   */
+  const sortedPreviousTotals = Object.values(userWins)
+    .map((data) => data.wins[data.wins.length - 2]?.runningTotal || 0)
+    .sort((a, b) => b - a)
+
+  const sortedCurrentTotals = rankedUsers.map((user) => user.total)
+
+  const currentTotal = sortedCurrentTotals.reduce((total, win) => {
+    return total + win
+  }, 0)
   if (currentUser) {
     return (
       <>
-        <button
-          className="button small"
+        {/* <Button
           onClick={async () => {
             await logoutMutation()
           }}
         >
-          Logout
-        </button>
-        <div>
+          fffffff
+        </Button> */}
+        <div className="flex w-100">
+          <div className="mt-4 mr-2 ml-4 rounded-md bg-white flex items-center p-2 w-2/3 shadow-sm">
+            <CurrencyDollarIcon className="h-14 w-14 text-yellow-500 ml-0.5 mr-2" />
+            <div className="ml-2">
+              <div className="text-gray-300">Winnings:</div>
+              <div className="text-3xl">{(currentTotal / 100).toFixed(2)} </div>
+            </div>
+          </div>
+          <div className="mt-4 ml-2 mr-4 rounded-md bg-white flex items-center p-2 w-1/3 shadow-sm">
+            <CalendarIcon className="h-14 w-14 text-blue-500 ml-0.5 mr-2" />
+            <div className="ml-2">
+              <div className="text-gray-300">Weeks:</div>
+              <div className="text-3xl text-center">2</div>
+            </div>
+          </div>
+        </div>
+
+        <div className="p-4">
+          <Table>
+            {/* <Table.Head>
+              <Table.HeadCell>Name</Table.HeadCell>
+              <Table.HeadCell>Form</Table.HeadCell>
+              <Table.HeadCell>$</Table.HeadCell>
+            </Table.Head> */}
+            <Table.Body>
+              {rankedUsers.map(({ user, total, wins }, index) => {
+                const currentRank =
+                  sortedCurrentTotals.indexOf(wins[wins.length - 1]?.runningTotal || 0) + 1
+                const prevRank =
+                  sortedPreviousTotals.indexOf(wins[wins.length - 2]?.runningTotal || 0) + 1
+                return (
+                  <Table.Row>
+                    {/* <Table.Cell className="px-2 py-2 w-8"></Table.Cell> */}
+                    <Table.Cell className="px-2 py-2">
+                      <div className="flex items-center">
+                        <strong className="w-3 mr-1">{index + 1}</strong>
+                        {currentRank > prevRank ? (
+                          <ArrowSmDownIcon className="h-5 w-5 text-red-400 ml-0.5 mr-2" />
+                        ) : currentRank < prevRank ? (
+                          <ArrowSmUpIcon className="h-5 w-5 text-green-400 ml-0.5 mr-2" />
+                        ) : (
+                          <ArrowSmRightIcon className="h-5 w-5 text-gray-400 ml-0.5 mr-2" />
+                        )}
+                        {user.name}
+                      </div>
+                    </Table.Cell>
+                    <Table.Cell className="px-2 py-2">
+                      <div className="flex">
+                        {currentForm(wins).map((win) =>
+                          win === true ? (
+                            <CheckCircleIcon className="h-4 w-4 text-green-400 mr-1" />
+                          ) : win === false ? (
+                            <XCircleIcon className="h-4 w-4 text-red-400 mr-1" />
+                          ) : (
+                            <BanIcon className="h-4 w-4 text-gray-300 mr-1" />
+                          )
+                        )}
+                      </div>
+                    </Table.Cell>
+                    <Table.Cell className="px-2 py-2">${(total / 100).toFixed(2)}</Table.Cell>
+                  </Table.Row>
+                )
+              })}
+            </Table.Body>
+          </Table>
+        </div>
+        <div className="bg-indigo-600">
           User id: <code>{currentUser.id}</code>
           <br />
           User role: <code>{currentUser.role}</code>
@@ -51,216 +159,10 @@ const UserInfo = () => {
 
 const Home: BlitzPage = () => {
   return (
-    <div className="container">
-      <main>
-        <div className="logo">
-          <img src="/logo.png" alt="blitz.js" />
-        </div>
-        <p>
-          <strong>Congrats!</strong> Your app is ready, including user sign-up and log-in.
-        </p>
-        <div className="buttons" style={{ marginTop: "1rem", marginBottom: "1rem" }}>
-          <Suspense fallback="Loading...">
-            <UserInfo />
-          </Suspense>
-        </div>
-        <p>
-          <strong>
-            To add a new model to your app, <br />
-            run the following in your terminal:
-          </strong>
-        </p>
-        <pre>
-          <code>blitz generate all project name:string</code>
-        </pre>
-        <div style={{ marginBottom: "1rem" }}>(And select Yes to run prisma migrate)</div>
-        <div>
-          <p>
-            Then <strong>restart the server</strong>
-          </p>
-          <pre>
-            <code>Ctrl + c</code>
-          </pre>
-          <pre>
-            <code>blitz dev</code>
-          </pre>
-          <p>
-            and go to{" "}
-            <Link href="/projects">
-              <a>/projects</a>
-            </Link>
-          </p>
-        </div>
-        <div className="buttons" style={{ marginTop: "5rem" }}>
-          <a
-            className="button"
-            href="https://blitzjs.com/docs/getting-started?utm_source=blitz-new&utm_medium=app-template&utm_campaign=blitz-new"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-          <a
-            className="button-outline"
-            href="https://github.com/blitz-js/blitz"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Github Repo
-          </a>
-          <a
-            className="button-outline"
-            href="https://discord.blitzjs.com"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Discord Community
-          </a>
-        </div>
-      </main>
-
-      <footer>
-        <a
-          href="https://blitzjs.com?utm_source=blitz-new&utm_medium=app-template&utm_campaign=blitz-new"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by Blitz.js
-        </a>
-      </footer>
-
-      <style jsx global>{`
-        @import url("https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@300;700&display=swap");
-
-        html,
-        body {
-          padding: 0;
-          margin: 0;
-          font-family: "Libre Franklin", -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-            Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-        }
-
-        * {
-          -webkit-font-smoothing: antialiased;
-          -moz-osx-font-smoothing: grayscale;
-          box-sizing: border-box;
-        }
-        .container {
-          min-height: 100vh;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-        }
-
-        main {
-          padding: 5rem 0;
-          flex: 1;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-        }
-
-        main p {
-          font-size: 1.2rem;
-        }
-
-        p {
-          text-align: center;
-        }
-
-        footer {
-          width: 100%;
-          height: 60px;
-          border-top: 1px solid #eaeaea;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          background-color: #45009d;
-        }
-
-        footer a {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-
-        footer a {
-          color: #f4f4f4;
-          text-decoration: none;
-        }
-
-        .logo {
-          margin-bottom: 2rem;
-        }
-
-        .logo img {
-          width: 300px;
-        }
-
-        .buttons {
-          display: grid;
-          grid-auto-flow: column;
-          grid-gap: 0.5rem;
-        }
-        .button {
-          font-size: 1rem;
-          background-color: #6700eb;
-          padding: 1rem 2rem;
-          color: #f4f4f4;
-          text-align: center;
-        }
-
-        .button.small {
-          padding: 0.5rem 1rem;
-        }
-
-        .button:hover {
-          background-color: #45009d;
-        }
-
-        .button-outline {
-          border: 2px solid #6700eb;
-          padding: 1rem 2rem;
-          color: #6700eb;
-          text-align: center;
-        }
-
-        .button-outline:hover {
-          border-color: #45009d;
-          color: #45009d;
-        }
-
-        pre {
-          background: #fafafa;
-          border-radius: 5px;
-          padding: 0.75rem;
-          text-align: center;
-        }
-        code {
-          font-size: 0.9rem;
-          font-family: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono,
-            Bitstream Vera Sans Mono, Courier New, monospace;
-        }
-
-        .grid {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          flex-wrap: wrap;
-
-          max-width: 800px;
-          margin-top: 3rem;
-        }
-
-        @media (max-width: 600px) {
-          .grid {
-            width: 100%;
-            flex-direction: column;
-          }
-        }
-      `}</style>
+    <div>
+      <Suspense fallback="Loading...">
+        <UserInfo />
+      </Suspense>
     </div>
   )
 }

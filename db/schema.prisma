@@ -23,6 +23,7 @@ model User {
 
   tokens   Token[]
   sessions Session[]
+  wins     Win[]
 }
 
 model Session {
@@ -63,3 +64,14 @@ model Token {
 // enum TokenType {
 //   RESET_PASSWORD
 // }
+
+model Win {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  amount    Int
+  week      Int
+  paid      Boolean
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+}

@@ -10,6 +10,11 @@ import {
 import { ErrorBoundary } from "react-error-boundary"
 import LoginForm from "app/auth/components/LoginForm"
 import { Suspense } from "react"
+import "app/core/styles/index.css"
+
+//shaunoff-ui
+import { theme } from "@shaunoff-ui/components"
+const { ThemeProvider } = theme
 
 export default function App({ Component, pageProps }: AppProps) {
   const getLayout = Component.getLayout || ((page) => page)
@@ -22,7 +27,7 @@ export default function App({ Component, pageProps }: AppProps) {
         resetKeys={[router.asPath]}
         onReset={useQueryErrorResetBoundary().reset}
       >
-        {getLayout(<Component {...pageProps} />)}
+        <ThemeProvider>{getLayout(<Component {...pageProps} />)}</ThemeProvider>
       </ErrorBoundary>
     </Suspense>
   )

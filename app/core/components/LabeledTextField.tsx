@@ -1,18 +1,20 @@
 import { forwardRef, PropsWithoutRef } from "react"
 import { useField } from "react-final-form"
+import { Input } from "@shaunoff-ui/components"
 
 export interface LabeledTextFieldProps extends PropsWithoutRef<JSX.IntrinsicElements["input"]> {
   /** Field name. */
   name: string
   /** Field label. */
-  label: string
+  label?: string
   /** Field type. Doesn't include radio buttons and checkboxes */
   type?: "text" | "password" | "email" | "number"
   outerProps?: PropsWithoutRef<JSX.IntrinsicElements["div"]>
+  className?: string
 }
 
 export const LabeledTextField = forwardRef<HTMLInputElement, LabeledTextFieldProps>(
-  ({ name, label, outerProps, ...props }, ref) => {
+  ({ name, label, outerProps, className, ...props }, ref) => {
     const {
       input,
       meta: { touched, error, submitError, submitting },
@@ -24,33 +26,15 @@ export const LabeledTextField = forwardRef<HTMLInputElement, LabeledTextFieldPro
 
     return (
       <div {...outerProps}>
-        <label>
-          {label}
-          <input {...input} disabled={submitting} {...props} ref={ref} />
-        </label>
-
-        {touched && normalizedError && (
-          <div role="alert" style={{ color: "red" }}>
-            {normalizedError}
-          </div>
-        )}
-
-        <style jsx>{`
-          label {
-            display: flex;
-            flex-direction: column;
-            align-items: start;
-            font-size: 1rem;
-          }
-          input {
-            font-size: 1rem;
-            padding: 0.25rem 0.5rem;
-            border-radius: 3px;
-            border: 1px solid purple;
-            appearance: none;
-            margin-top: 0.5rem;
-          }
-        `}</style>
+        <Input
+          onChange={input.onChange}
+          value={input.value.toString()}
+          disabled={submitting}
+          ref={ref}
+          label={label}
+          className={className}
+          message={touched && normalizedError && normalizedError}
+        />
       </div>
     )
   }
