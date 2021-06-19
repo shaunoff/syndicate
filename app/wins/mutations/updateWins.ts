@@ -10,6 +10,7 @@ const UpdateWins = z
         id: z.number().optional(),
         amount: z.number(),
         week: z.number(),
+        paid: z.boolean(),
       })
       .array(),
   })
@@ -29,12 +30,11 @@ export default resolver.pipe(
   ) => {
     data.forEach((user) => {
       user.wins.forEach(async ({ id, week, amount, paid }) => {
-        if (amount > 0) {
-          try {
-            await db.win.update({ where: { id }, data: { week, amount, paid } })
-          } catch (e) {
-            console.log("error", e)
-          }
+        console.log("paid 222 amount", paid, week, amount)
+        try {
+          await db.win.update({ where: { id }, data: { week, amount, paid } })
+        } catch (e) {
+          console.log("error", e)
         }
       })
     })

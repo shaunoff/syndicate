@@ -35,8 +35,9 @@ export const WinTable = () => {
           )
           refetch()
         }}
+        className="my-2"
       >
-        Next Week
+        Increase Week
       </Button>
       <WinForm
         userWins={userWins}
@@ -45,7 +46,6 @@ export const WinTable = () => {
             wins: Win[]
           })[]
         }) => {
-          console.log("triggered")
           updateWinsMutation(values.users)
         }}
       />

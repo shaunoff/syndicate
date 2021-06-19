@@ -78,7 +78,7 @@ const UserInfo = () => {
           <CalendarIcon className="h-14 w-14 text-blue-500 ml-0.5 mr-2" />
           <div className="ml-2">
             <div className="text-gray-300">Weeks:</div>
-            <div className="text-3xl text-center">2</div>
+            <div className="text-3xl text-center">{rankedUsers[0]?.wins.length}</div>
           </div>
         </div>
       </div>

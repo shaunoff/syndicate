@@ -29,7 +29,7 @@ export const LabeledTextField = forwardRef<HTMLInputElement, LabeledTextFieldPro
         <Input
           onChange={input.onChange}
           value={input.value.toString()}
-          disabled={submitting}
+          disabled={submitting || props.disabled}
           ref={ref}
           label={label}
           className={className}

@@ -1,12 +1,15 @@
 import { ReactNode, PropsWithoutRef } from "react"
-import { Form as FinalForm, FormProps as FinalFormProps } from "react-final-form"
+import { Form as FinalForm, FormProps as FinalFormProps, FormRenderProps } from "react-final-form"
 import { z } from "zod"
+
+import { Button } from "@shaunoff-ui/components"
+
 export { FORM_ERROR } from "final-form"
 
 export interface FormProps<S extends z.ZodType<any, any>>
   extends Omit<PropsWithoutRef<JSX.IntrinsicElements["form"]>, "onSubmit"> {
-  /** All your form fields */
-  children?: ReactNode
+  /** render props to pass form props (only values for now) */
+  children?: (props: Partial<FormRenderProps<z.TypeOf<S>, Partial<z.TypeOf<S>>>>) => JSX.Element
   /** Text to display in the submit button */
   submitText?: string
   schema?: S
@@ -33,11 +36,12 @@ export function Form<S extends z.ZodType<any, any>>({
           return error.formErrors.fieldErrors
         }
       }}
+      onChange={(val) => console.log("gfhhfdkjgh", val)}
       onSubmit={onSubmit}
-      render={({ handleSubmit, submitting, submitError }) => (
+      render={({ handleSubmit, submitting, submitError, values, dirty }) => (
         <form onSubmit={handleSubmit} className="form" {...props}>
           {/* Form fields supplied as children are rendered here */}
-          {children}
+          {children && children({ values, dirty, submitting })}
 
           {submitError && (
             <div role="alert" style={{ color: "red" }}>
@@ -46,16 +50,10 @@ export function Form<S extends z.ZodType<any, any>>({
           )}
 
           {submitText && (
-            <button type="submit" disabled={submitting}>
+            <Button type="submit" disabled={submitting || !dirty}>
               {submitText}
-            </button>
+            </Button>
           )}
-
-          <style global jsx>{`
-            .form > * + * {
-              margin-top: 1rem;
-            }
-          `}</style>
         </form>
       )}
     />
