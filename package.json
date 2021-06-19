@@ -26,7 +26,7 @@
   "dependencies": {
     "@heroicons/react": "1.0.1",
     "@prisma/client": "2.24.1",
-    "@shaunoff-ui/components": "1.1.9",
+    "@shaunoff-ui/components": "1.1.13",
     "@tailwindcss/forms": "0.3.3",
     "@tailwindcss/jit": "0.1.18",
     "@types/preview-email": "2.0.0",
