@@ -70,7 +70,7 @@ const WinChart: React.FC<WinChartProps> = ({ userWins }) => {
   const cumulativeTotals = winTotalsArray.map(cumulativeSum)
   const average = winTotalsArray.reduce((total, win) => win + total, 0) / winTotalsArray.length
   const data = new Array(50).fill(null).map((win, index) => ({
-    avg: parseFloat(((average * (index + 1)) / 100).toFixed(2)),
+    projected: parseFloat(((average * (index + 1)) / 100).toFixed(2)),
     name: index + 1,
     win: cumulativeTotals[index]
       ? parseFloat(((cumulativeTotals[index] || 0) / 100).toFixed(2))
@@ -88,27 +88,27 @@ const WinChart: React.FC<WinChartProps> = ({ userWins }) => {
             <strong className="ml-2 text-blue-600">£ {((average * 50) / 100).toFixed(2)}</strong>
           </div>
         </div>
-        <ResponsiveContainer width="100%" height="92%">
+        <ResponsiveContainer width="100%" height="90%">
           <LineChart
-            width={500}
+            width={400}
             height={364}
             data={data}
             margin={{
               top: 5,
-              right: 30,
-              left: 20,
-              bottom: 5,
+              right: 5,
+              left: -20,
+              bottom: -20,
             }}
           >
-            {/* <CartesianGrid strokeDasharray="3 3" /> */}
+            <CartesianGrid strokeDasharray="3 3" />
             <XAxis tickCount={3} tick={false} />
-            <YAxis />
+            <YAxis style={{ fontSize: "10px", position: "relative", top: -30 }} />
             {/* <Tooltip /> */}
-            {/* <Legend /> */}
+            <Legend wrapperStyle={{ fontSize: "10px", bottom: 5 }} />
             <Line type="monotone" dataKey="win" stroke="#82ca9d" strokeWidth={2} dot={true} />
             <Line
               type="monotone"
-              dataKey="avg"
+              dataKey="projected"
               stroke="#8884d8"
               dot={false}
               strokeDasharray="3 3"
