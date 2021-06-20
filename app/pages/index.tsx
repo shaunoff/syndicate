@@ -3,6 +3,7 @@ import { Link, BlitzPage, useMutation, useQuery, Routes } from "blitz"
 import Layout from "app/core/layouts/Layout"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import logout from "app/auth/mutations/logout"
+import WinChart from "app/wins/components/WinChart"
 import { Table } from "@shaunoff-ui/components"
 import getWinTotals, { NormalizedWin, UserWinData } from "app/wins/queries/getWinTotals"
 import {
@@ -137,6 +138,7 @@ const UserInfo = () => {
         <br />
         User role: <code>{currentUser.role}</code>
       </div> */}
+      <WinChart userWins={userWins} />
     </>
   )
 }
